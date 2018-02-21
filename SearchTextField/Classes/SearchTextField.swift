@@ -692,7 +692,7 @@ public class SearchTextFieldItemCell: UITableViewCell {
 		
 		let h = bounds.size.height
 		let w = h * 1.25
-		let pad = 10
+		let pad: CGFloat = 10.0
 		customImageView?.frame = CGRect(x: 0, y:0, width: w, height: h)
 		contentView.frame = CGRect(x: w + pad, y:0, width: bounds.size.width - (w + pad * 2), height: bounds.size.height)
 		textLabel?.frame = contentView.bounds
