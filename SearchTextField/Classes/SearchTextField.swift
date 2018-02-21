@@ -119,6 +119,8 @@ open class SearchTextField: UITextField {
 	
 	/// Set wait time before running search
 	open var stoppedTypingDelay = 0.2
+
+	open var showAllSuggestions = false
     
     ////////////////////////////////////////////////////////////////////////
     // Private implementation
@@ -381,7 +383,7 @@ open class SearchTextField: UITextField {
     }
     
     @objc open func textFieldDidEndEditing() {
-        clearResults()
+        //clearResults()
         tableView?.reloadData()
         placeholderLabel?.attributedText = nil
     }
@@ -429,7 +431,7 @@ open class SearchTextField: UITextField {
                 let titleFilterRange = (item.title as NSString).range(of: text!, options: comparisonOptions)
                 let subtitleFilterRange = item.subtitle != nil ? (item.subtitle! as NSString).range(of: text!, options: comparisonOptions) : NSMakeRange(NSNotFound, 0)
                 
-                if titleFilterRange.location != NSNotFound || subtitleFilterRange.location != NSNotFound || addAll {
+                if titleFilterRange.location != NSNotFound || subtitleFilterRange.location != NSNotFound || addAll || showAllSuggestions {
                     item.attributedTitle = NSMutableAttributedString(string: item.title)
                     item.attributedSubtitle = NSMutableAttributedString(string: (item.subtitle != nil ? item.subtitle! : ""))
                     
@@ -443,7 +445,7 @@ open class SearchTextField: UITextField {
                 }
             } else {
                 var textToFilter = text!.lowercased()
-                
+
                 if inlineMode, let filterAfter = startFilteringAfter {
                     if let suffixToFilter = textToFilter.components(separatedBy: filterAfter).last, (suffixToFilter != "" || startSuggestingInmediately == true), textToFilter != suffixToFilter {
                         textToFilter = suffixToFilter
@@ -452,17 +454,17 @@ open class SearchTextField: UITextField {
                         return
                     }
                 }
-                
+
                 if item.title.lowercased().hasPrefix(textToFilter) {
                     let indexFrom = textToFilter.index(textToFilter.startIndex, offsetBy: textToFilter.characters.count)
                     let itemSuffix = item.title[indexFrom...]
-                    
+
                     item.attributedTitle = NSMutableAttributedString(string: String(itemSuffix))
                     filteredResults.append(item)
                 }
             }
         }
-        
+
         tableView?.reloadData()
         
         if inlineMode {
