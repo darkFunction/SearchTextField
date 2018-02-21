@@ -383,7 +383,6 @@ open class SearchTextField: UITextField {
     }
     
     @objc open func textFieldDidEndEditing() {
-        //clearResults()
         tableView?.reloadData()
         placeholderLabel?.attributedText = nil
     }
@@ -684,13 +683,18 @@ public class SearchTextFieldItemCell: UITableViewCell {
 			customImageView.clipsToBounds = true
 			customImageView.autoresizesSubviews = false
 		}
+		textLabel?.lineBreakMode = .byWordWrapping
+		textLabel?.numberOfLines = 0
 	}
 	
 	public override func layoutSubviews() {
 		super.layoutSubviews()
 		
-		let size = bounds.size.height
-		customImageView?.frame = CGRect(x: 0, y:0, width: size * 1.25, height: size)
-		contentView.frame = contentView.frame.insetBy(dx: size + 10, dy: 0)
+		let h = bounds.size.height
+		let w = h * 1.25
+		let pad = 10
+		customImageView?.frame = CGRect(x: 0, y:0, width: w, height: h)
+		contentView.frame = CGRect(x: w + pad, y:0, width: bounds.size.width - (w + pad * 2), height: bounds.size.height)
+		textLabel?.frame = contentView.bounds
 	}
 }
